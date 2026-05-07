@@ -23,6 +23,7 @@ ENVIRON_DEFAULTS = {
     'APPDATA': 'C:/Users/testing/AppData/Roaming/',
     'HOMEDRIVE': 'C:/',
     'HOMEPATH': 'Users/testing/',
+    'YT_DLP_ROOTLESS_PREFIX': None,
 }
 
 
@@ -99,6 +100,14 @@ class TestConfig(unittest.TestCase):
 
     def test_config_default_grouping(self):
         self._simple_grouping_test()
+
+    @set_environ(YT_DLP_ROOTLESS_PREFIX='/var/jb')
+    def test_config_rootless_system_locations(self):
+        files, _ = self._simple_config_test()
+        self.assertIn(Path('/var/jb/etc/yt-dlp.conf'), files)
+        self.assertIn(Path('/var/jb/etc/yt-dlp/config'), files)
+        self.assertIn(Path('/var/jb/etc/yt-dlp/config.txt'), files)
+        self.assertNotIn(Path('/etc/yt-dlp.conf'), files)
 
     def _simple_grouping_test(self):
         expected_groups = make_expected_groups()

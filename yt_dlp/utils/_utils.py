@@ -4740,7 +4740,11 @@ def get_user_config_dirs(package_name):
 
 
 def get_system_config_dirs(package_name):
-    # /etc/package_name
+    prefix = os.environ.get('YT_DLP_ROOTLESS_PREFIX')
+    if prefix:
+        yield os.path.join(prefix, 'etc', package_name)
+        return
+
     yield os.path.join('/etc', package_name)
 
 
